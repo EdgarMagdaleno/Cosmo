@@ -1,1 +1,1 @@
-{"name":"spanish","work":[{"deadline":"2016-02-05 00:00:00","content":"holahola"}],"proffessor":"Not known"}
+{"name":"spanish","works":[],"proffessor":null}

@@ -1,1 +1,1 @@
-{"name":"hola","work":[],"proffessor":"Not known"}
+{"name":"hola","works":[],"proffessor":null}

@@ -1,5 +1,10 @@
+import haxe.Json;
+import sys.io.File;
+import sys.FileSystem;
+
 class Cosmo {
 	public var subjects:Map<String, Subject>;
+	public var args:Array<String>;
 
 	public static function main():Void {
 		new Cosmo();
@@ -7,21 +12,26 @@ class Cosmo {
 
 	public function new():Void {
 		subjects = new Map<String, Subject>();
+		args = Sys.args();
 		getObjects();
 		getArguments();
 	}
 
 	public function getObjects():Void {
 		var tmp;
-		for (filename in sys.FileSystem.readDirectory("subjects")) {
-			tmp = haxe.Json.parse(sys.io.File.getContent("subjects/" + filename));
-			subjects.set(filename.split(".txt")[0], new Subject(filename.split(".txt")[0], tmp.professor));
+		for ( filename in FileSystem.readDirectory("subjects") ) {
+			tmp = Json.parse(File.getContent("subjects/" + filename));
+			 subjects.set(tmp.name, new Subject(tmp.name, tmp.professor));
+			if(tmp.name == "calcu")trace(Json.parse(tmp.works[0]));
+			//subjects.get(tmp.name).works.push(new Work(tmp.works[0].content, tmp.works[0].deadline));
 		}
+
+		//trace(subjects.get("spanish").works);
 	}
 
 	public function getArguments():Void {
-		for ( i  in 0 ... Sys.args().length )
-			switch (Sys.args()[i]) {
+		for ( i  in 0 ... args.length )
+			switch (args[i]) {
 				case "add": add(i);
 				case "list": list(i);
 				case "new": newFunction(i);
@@ -29,20 +39,21 @@ class Cosmo {
 	}
 
 	public function add(i:Int):Void {
-		switch (Sys.args()[i + 1]) {
+		switch (args[i + 1]) {
 			case "subject":
-				if ( !sys.FileSystem.exists("subjects/" + Sys.args()[i + 2] + ".txt" )) {
-					subjects.set(Sys.args()[i + 2], new Subject(Sys.args()[i + 2], In.readLine("Professor name: ")));
-					sys.io.File.write("subjects/" + Sys.args()[i + 2] + ".txt").writeString(haxe.Json.stringify(subjects.get(Sys.args()[i + 2])));
+				if ( !FileSystem.exists("subjects/" + args[i + 2] + ".txt" )) {
+					subjects.set(args[i + 2], new Subject(Sys.args()[i + 2], In.readLine("Professor name: ")));
+					File.write("subjects/" + Sys.args()[i + 2] + ".txt").writeString(Json.stringify(subjects.get(Sys.args()[i + 2])));
 				} else throw("Subject name already exists.");
 			default: throw("Invalid syntax.");
 		}
 	}
 
 	public function newFunction(i:Int):Void {
-		if ( subjects.exists(Sys.args()[i + 1]) ) {
-			switch ( Sys.args()[i + 2] ) {
-				case "work": subjects.get(Sys.args()[i + 1]).work.push(new Work(In.readLine("Content: "), Date.fromString(In.readLine("Deadline: "))));
+		if ( subjects.exists(args[i + 1]) ) {
+			switch ( args[i + 2] ) {
+				case "work": 
+					subjects.get(args[i + 1]).works.push(new Work(In.readLine("Content: "), Date.fromString(In.readLine("Deadline: "))));
 			}
 			update();
 		}
@@ -50,12 +61,13 @@ class Cosmo {
 	}
 
 	public function list(i:Int):Void {
-		if ( subjects.exists(Sys.args()[i + 1]) )
-			switch ( Sys.args()[i + 2] ) {
-				case "work": Sys.println(subjects.get(Sys.args()[i + 1]).work);
+		if ( subjects.exists(args[i + 1]) )
+			switch ( args[i + 2] ) {
+				case "work": Sys.println(subjects.get(args[i + 1]).works.toString());
 				default: throw("Option not recognized.");
 			}
 		else throw("Subject does not exist.");
+		trace(subjects.get("spanish"));
 	}
 
 	public function exists(name:String):Bool {
@@ -65,6 +77,6 @@ class Cosmo {
 
 	public function update():Void {
 		for ( subject in subjects )
-			sys.io.File.write("subjects/" + subject.name + ".txt").writeString(haxe.Json.stringify(subject));
+			File.write("subjects/" + subject.name + ".txt").writeString(Json.stringify(subject));
 	}
 }

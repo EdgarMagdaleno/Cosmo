@@ -2,11 +2,11 @@ class Subject {
 	public var name:String;
 	public var proffessor:String;
 	public var email:String;
-	public var work:Array<Work>;
+	public var works:Array<Work>;
 
-	public function new(subjectName:String, ?proffessorName = "Not known"):Void {
+	public function new(subjectName:String, proffessorName):Void {
 		name = subjectName;
 		proffessor = proffessorName;
-		work = new Array<Work>();
+		works = new Array<Work>();
 	}
 }
