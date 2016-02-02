@@ -1,1 +1,1 @@
-{"name":"calculo","work":"None","email":"Not known","proffessor":"Noemi"}
+{"name":"calculo","work":[],"proffessor":"Not known"}

@@ -15,7 +15,7 @@ class Cosmo {
 		var tmp;
 		for (filename in sys.FileSystem.readDirectory("subjects")) {
 			tmp = haxe.Json.parse(sys.io.File.getContent("subjects/" + filename));
-			subjects.set(filename.split(".txt")[0], new Subject(filename.split(".txt")[0], tmp.professor, tmp.email, tmp.work));
+			subjects.set(filename.split(".txt")[0], new Subject(filename.split(".txt")[0], tmp.professor));
 		}
 	}
 
@@ -24,7 +24,7 @@ class Cosmo {
 			switch (Sys.args()[i]) {
 				case "add": add(i);
 				case "list": list(i);
-				case "new": newFunct(i);
+				case "new": newFunction(i);
 			}
 	}
 
@@ -39,11 +39,13 @@ class Cosmo {
 		}
 	}
 
-	public function newFunct(i:Int):Void {
-		if ( subjects.exists(Sys.args()[i + 1]) )
+	public function newFunction(i:Int):Void {
+		if ( subjects.exists(Sys.args()[i + 1]) ) {
 			switch ( Sys.args()[i + 2] ) {
-				case "work": subjects.get(Sys.args()[i + 1]).work = In.readLine("New work: ");
+				case "work": subjects.get(Sys.args()[i + 1]).work.push(new Work(In.readLine("Content: "), Date.fromString(In.readLine("Deadline: "))));
 			}
+			update();
+		}
 		else throw("Subject does not exist.");
 	}
 
