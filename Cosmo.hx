@@ -5,6 +5,7 @@ import sys.FileSystem;
 class Cosmo {
 	public var subjects:Map<String, Subject>;
 	public var args:Array<String>;
+	public var monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 	public static function main():Void {
 		new Cosmo();
@@ -69,21 +70,23 @@ class Cosmo {
 				case "work":
 					if ( subj.works.length != 0 ) 
 						for ( i  in 0 ... subj.works.length )
-							Sys.println("Work [1]:\t" + subj.works[i].content + ", Deadline: " + getLeft(subj.works[i].deadline));
+							Sys.println("Work ["+i+"]:\t" + subj.works[i].content + ", " + getLeft(subj.works[i].deadline) + " days left");
 					else Sys.println("No work");
 				default: throw("Option not recognized.");
 			}
 		} else throw("Subject does not exist.");
 	}
 
-	public function getLeft(deadline:Date):String {
+	public function getLeft(deadline:Date):Int {
 		var dl:Date = Date.fromString(deadline.toString());
-		trace(dl.toString());
-		trace(Date.now().toString());
+		return getDays(dl) - getDays(Date.now());
+	}
 
-		var o = dl.getTime() - Date.now().getTime();
-		trace(o);
-		return "hola";
+	public function getDays(date:Date):Int {
+		var days:Int = 0;
+		for ( i in 0 ... date.getMonth()) days += monthDays[i];
+		days += date.getDate();
+		return days;
 	}
 
 	public function exists(name:String):Bool {
