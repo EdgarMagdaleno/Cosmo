@@ -18,15 +18,17 @@ class Cosmo {
 	}
 
 	public function getObjects():Void {
-		var tmp;
+		var tmp:Dynamic;
 		for ( filename in FileSystem.readDirectory("subjects") ) {
 			tmp = Json.parse(File.getContent("subjects/" + filename));
-			 subjects.set(tmp.name, new Subject(tmp.name, tmp.professor));
-			if(tmp.name == "calcu")trace(Json.parse(tmp.works[0]));
-			//subjects.get(tmp.name).works.push(new Work(tmp.works[0].content, tmp.works[0].deadline));
-		}
+			subjects.set(tmp.name, new Subject(tmp.name, tmp.professor));
 
-		//trace(subjects.get("spanish").works);
+			for ( i in 0 ... tmp.works.length ){
+				subjects.get(tmp.name).works.push(new Work(
+					tmp.works[i].content,
+					tmp.works[i].deadline));
+			}
+		}
 	}
 
 	public function getArguments():Void {
@@ -61,13 +63,27 @@ class Cosmo {
 	}
 
 	public function list(i:Int):Void {
-		if ( subjects.exists(args[i + 1]) )
+		if ( subjects.exists(args[i + 1]) ) {
+			var subj:Subject = subjects.get(args[i + 1]);
 			switch ( args[i + 2] ) {
-				case "work": Sys.println(subjects.get(args[i + 1]).works.toString());
+				case "work":
+					if ( subj.works.length != 0 ) 
+						for ( i  in 0 ... subj.works.length )
+							Sys.println("Work [1]:\t" + subj.works[i].content + ", Deadline: " + getLeft(subj.works[i].deadline));
+					else Sys.println("No work");
 				default: throw("Option not recognized.");
 			}
-		else throw("Subject does not exist.");
-		trace(subjects.get("spanish"));
+		} else throw("Subject does not exist.");
+	}
+
+	public function getLeft(deadline:Date):String {
+		var dl:Date = Date.fromString(deadline.toString());
+		trace(dl.toString());
+		trace(Date.now().toString());
+
+		var o = dl.getTime() - Date.now().getTime();
+		trace(o);
+		return "hola";
 	}
 
 	public function exists(name:String):Bool {
