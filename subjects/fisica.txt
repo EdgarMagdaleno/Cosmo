@@ -1,0 +1,1 @@
+{"name":"fisica","works":[{"deadline":"2016-02-10 00:00:00","content":"2.1, 2.2, 2.3, 2.7, 2.13, 2.15, 2.19, hojas equis engrapadas, nombre y matricula"}],"proffessor":null}

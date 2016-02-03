@@ -70,7 +70,7 @@ class Cosmo {
 				case "work":
 					if ( subj.works.length != 0 ) 
 						for ( i  in 0 ... subj.works.length )
-							Sys.println("Work ["+i+"]:\t" + subj.works[i].content + ", " + getLeft(subj.works[i].deadline) + " days left");
+							Sys.println("Work ["+(i+1)+"]: " + subj.works[i].content + ", " + getLeft(subj.works[i].deadline) + " days left");
 					else Sys.println("No work");
 				default: throw("Option not recognized.");
 			}
